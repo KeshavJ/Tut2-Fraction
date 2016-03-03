@@ -17,12 +17,16 @@ public:
 	Fraction divide(Fraction);
 	void print();
 	int hcf(int, int);
+	Fraction operator+(Fraction &);  // allows f1+f2
+	Fraction operator-(Fraction &); // allows f1-f2
 	Fraction();
 	Fraction(int, int);								//Constructor declaration
 	~Fraction();									//Destructor declaration
 };
 
 Fraction::Fraction() {
+	numerator = 0;
+	denominator = 0;
 }
 
 Fraction::~Fraction() {
@@ -42,12 +46,12 @@ Fraction Fraction::getNumDenom() {					//Accessor function
 	return Fraction(numerator, denominator);
 }
 
-Fraction Fraction::add(Fraction f) {
-	return Fraction(((numerator*f.denominator) + (f.numerator * denominator)), (denominator * f.denominator));
+Fraction Fraction::operator+(Fraction &f) {
+	return Fraction(((numerator*f.denominator) + (denominator*f.numerator)), (denominator * f.denominator));
 }
 
-Fraction Fraction::subtract(Fraction f) {
-	return Fraction(((numerator*f.denominator) - (f.numerator * denominator)), (denominator * f.denominator));
+Fraction Fraction::operator-(Fraction &f) {
+	return Fraction(((numerator*f.denominator) - (denominator*f.numerator)), (denominator * f.denominator));
 }
 
 Fraction Fraction::multiply(Fraction f) {
@@ -76,49 +80,54 @@ void Fraction::print() {
 	int hcf1 = hcf(a, b);							//hcf for numerator & denominator
 	int hcf2 = hcf(rem, b);							//hcf for remainder and denominator
 
-		if (a > b || (-1)*a > b || a > (-1)*b)			// counts how many times the denominator goes to te numerator if it is an improper fraction
-		{
-			if (a < 0)
-			{
-				do
-				{
-					a += b;
-					i++;
-				} while (a < 0);
-			}
 
-			else
+	if (a > b)			// counts how many times the denominator goes to te numerator if it is an improper fraction
+	{
+		
+			do
 			{
-				do
-				{
-					a -= b;
-					i++;
-				} while (a > 0);
-			}
+				a -= b;
+				i++;
+			} while (a > 0);
 		}
 
-		if ((i - 1) == 0)
+		if ((i) == 0)
 		{
 
-			cout << a / hcf1 << "/" << b / hcf1 << endl;
+			cout << a/hcf1 << "/" << b/hcf1;
 		}
 		else {
 
-			cout << i - 1 << " " << rem / hcf2 << "/" << b / hcf2 << endl;
+			cout << i-1 << " " << rem / hcf2 << "/" << b / hcf2;
 		}
 	}
 
 
+
 int main() {
-	Fraction fract;
+	Fraction fract1, fract2, fract3;
 	int num, den;
 
-	cout << "Enter numerator" << endl;
+	cout << "Enter numerator of fraction 1" << endl;
 	cin >> num;
-	cout << "Enter denominator" << endl;
+	cout << "Enter denominator fraction 1" << endl;
 	cin >> den;
+	fract1.setNumDenom(num, den);
 
-	fract.setNumDenom(num, den);
-	fract.print();
+	cout << "Enter numerator of fraction 2" << endl;
+	cin >> num;
+	cout << "Enter denominator fraction 2" << endl;
+	cin >> den;
+	fract2.setNumDenom(num, den);
+
+	fract1.print();
+	cout << " + ";
+	fract2.print();
+	cout << " = ";
+
+	//overloading the + operator which allows addition
+	fract3 = fract1 + fract2;
+	fract3.print();
+	cout << endl;
 
 }
