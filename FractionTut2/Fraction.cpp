@@ -3,30 +3,26 @@
 using namespace std;
 
 class Fraction {
-private:
-	int numerator;
-	int denominator;
 
 public:
+	int numerator;
+	int denominator;
 									// Declaration of all methods
 	void setNumDenom(int, int);
 	Fraction getNumDenom();
-	Fraction add(Fraction);
-	Fraction subtract(Fraction);
-	Fraction multiply(Fraction);
-	Fraction divide(Fraction);
-	void print();
 	int hcf(int, int);
 	Fraction operator+(Fraction &);	// allows addition of objects fract1+fract2
 	Fraction operator-(Fraction &);	// allows subtraction of objects fract1-fract2
+	Fraction operator*(Fraction &);
+	Fraction operator/(Fraction &);
+	friend ostream& operator << (ostream &, const Fraction &); 
+	friend istream& operator >> (istream &, const Fraction &);
 	Fraction();
 	Fraction(int, int);	//Constructor declaration
 	~Fraction();	//Destructor declaration
 };
 
 Fraction::Fraction() {
-	numerator = 0;
-	denominator = 0;
 }
 
 Fraction::~Fraction() {
@@ -54,12 +50,13 @@ Fraction Fraction::operator-(Fraction &f) {
 	return Fraction(((numerator*f.denominator) - (denominator*f.numerator)), (denominator * f.denominator));
 }
 
-Fraction Fraction::multiply(Fraction f) {
+Fraction Fraction::operator*(Fraction &f) {
 	return Fraction((numerator*f.numerator), (denominator * f.denominator));
 }
 
-Fraction Fraction::divide(Fraction f) {
-	return Fraction((numerator * f.denominator), (denominator * f.numerator));
+
+Fraction Fraction::operator/(Fraction &f) {
+	return Fraction((numerator*f.numerator), (denominator * f.denominator));
 }
 
 int Fraction::hcf(int n, int d) {
@@ -72,85 +69,68 @@ int Fraction::hcf(int n, int d) {
 	}
 }
 
-void Fraction::print() {
-	int i = 0;
-	int a = numerator;
-	int b = denominator;
-	int rem = a % b;	//gets remainder
-	int hcf1 = hcf(a, b);	//hcf for numerator & denominator
-	int hcf2 = hcf(rem, b);		//hcf for remainder and denominator
+ istream &operator >> (istream &input, Fraction &frac) {
+	input >> frac.numerator >> frac.denominator; 
+	return input;
+	
+}
 
+ ostream &operator << (ostream &output, Fraction &frac) {
+	 int i = 0;
+	 int a = frac.numerator;
+	 int b = frac.denominator;
+	 int rem = a % b;	//gets remainder
+	 int hcf1 = frac.hcf(a, b);	//hcf for numerator & denominator
+	 int hcf2 = frac.hcf(rem, b);		//hcf for remainder and denominator
 
-	if (a > b)	// counts how many times the denominator goes to te numerator if it is an improper fraction
-	{
+	 if (a > b)	// counts how many times the denominator goes to te numerator if it is an improper fraction
+	 {
 
-		do
-		{
-			a -= b;
-			i++;
-		} while (a >= 0);
-	}
+		 do
+		 {
+			 a -= b;
+			 i++;
+		 } while (a >= 0);
+	 }
 
-	if ((i) == 0)
-	{
-
-		cout << a / hcf1 << "/" << b / hcf1;
-	}
-	else {
-
-		cout << i-1 << " " << rem / hcf2 << "/" << b / hcf2;
-	}
-
-	}
-
-
+	 if ((i) == 0)
+	 {
+		 output << a/hcf1 << "/" << b/hcf1;
+	 }
+	 else {
+		 output << i - 1 <<" " << rem/ hcf2 << "/" << b/hcf2;
+	 }
+	return output;
+	
+}
 
 int main() {
 	Fraction fract1, fract2, fract3;
 	int num, den;
 
-	cout << "Enter numerator of fraction 1" << endl;
-	cin >> num;
-	cout << "Enter denominator fraction 1" << endl;
-	cin >> den;
-	fract1.setNumDenom(num, den);
+	cout << "Enter the numerator and denominator of the First Fraction" << endl;
+	cin >> fract1;
+	cout << "Enter the numerator and denominator of the Second Fraction" << endl;
+    cin >> fract2;
 
-	cout << "Enter numerator of fraction 2" << endl;
-	cin >> num;
-	cout << "Enter denominator fraction 2" << endl;
-	cin >> den;
-	fract2.setNumDenom(num, den);
 
-	fract1.print();
-	cout << " + ";
-	fract2.print();
-	cout << " = ";
-
+	cout << fract1 << " + " << fract2 << " = ";
 	fract3 = fract1 + fract2;
-	fract3.print();
+	cout << fract3 << endl;
 	cout << endl;	
 
-	fract1.print();
-	cout << " - ";
-	fract2.print();
-	cout << " = ";
+	cout << fract1 << " - " << fract2 << " = ";
 	fract3 = fract1 - fract2;
-	fract3.print();
+	cout << fract3 << endl;
 	cout << endl;
 
-	fract1.print();
-	cout << " * ";
-	fract2.print();
-	cout << " = ";
-	fract3 = fract1.multiply(fract2);
-	fract3.print();
+	cout << fract1 << " * " << fract2 << " = ";
+	fract3 = fract1 * fract2;
+	cout << fract3 << endl;
 	cout << endl;
 
-	fract1.print();
-	cout << " / ";
-	fract2.print();
-	cout << " = ";
-	fract3 = fract1.divide(fract2);
-	fract3.print();
+	cout << fract1 << " / " << fract2 << " = ";
+	fract3 = fract1 / fract2;
+	cout << fract3 << endl;
 	cout << endl;
 }
